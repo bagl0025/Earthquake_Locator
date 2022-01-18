@@ -1,0 +1,21 @@
+# DEFINE OUTPUT FILE
+set psfile=/users/brian/desktop/eqlocate/map.ps
+
+# IF OUTPUT FILE PREVIOUSLY EXISTS, REMOVE OUTPUT FILE
+if (-e ${psfile}) /bin/rm -f ${psfile}
+
+# SET PARAMETERS FOR PLOT
+set range="-40/40/-40/40"
+set ticks="a30f10/a20f10"
+set projection="M7i"
+set circle="c0.20"
+
+# DRAW BASEMAP
+psbasemap -B${ticks} -J${projection} -R${range} -K -V  > ${psfile}
+
+# DRAW WORLD COASTLINES
+pscoast -J${projection} -R${range} -Dl -A500 -G200/200/200 -S255/255/255 -W -K -O -V >> ${psfile}
+
+# PLOT data points 
+psxy -R${range} -JM -P -O -K /users/brian/desktop/eqlocate/station.txt -: -S${circle} -W0.5p -G0/0/0 >> ${psfile}
+psxy -R${range} -JM -P -O -K /users/brian/desktop/eqlocate/eq.txt -: -S${circle} -W0.5p -G255/0/0 >> ${psfile}
